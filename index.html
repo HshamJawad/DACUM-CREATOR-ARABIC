@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ورشة عمل تطوير المناهج (DACUM)</title>
+  <!-- PWA manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#282c34">
+  <style>
+    /* General Styles from Reference */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      direction: rtl;
+      font-size: 18px; /* Reference: 18px */
+      background-color: #f0f0f0;
+      line-height: 1.6;
+    }
+
+    .App {
+      text-align: center;
+      font-family: Arial, sans-serif;
+      margin: 20px; /* Reference: 20px */
+      direction: rtl;
+      width: auto; /* Allow it to take full width based on sections */
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    .App-header {
+      background-color: #282c34;
+      padding: 20px; /* Reference: 20px */
+      color: white;
+      margin-bottom: 20px; /* Reduced margin to accommodate new buttons */
+    }
+
+    .App-header h1 {
+      margin: 0;
+      font-size: 2.2em; /* Reference: 2.2em */
+    }
+    
+    /* Data Management Buttons Section */
+    .data-management-section {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        padding: 10px;
+        background-color: #e9ecef;
+        border-radius: 5px;
+    }
+
+    .data-management-section button,
+    .data-management-section input[type="file"] {
+        font-size: 16px; /* Slightly smaller for these utility buttons */
+        padding: 8px 12px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+    }
+    
+    .data-management-section button.clear-btn {
+        background-color: #dc3545;
+        color: white;
+        border-color: #dc3545;
+    }
+    .data-management-section button.clear-btn:hover {
+        background-color: #c82333;
+    }
+    
+    .data-management-section button.json-btn {
+        background-color: #ffc107;
+        color: #212529;
+        border-color: #ffc107;
+    }
+    .data-management-section button.json-btn:hover {
+        background-color: #e0a800;
+    }
+    
+    #open-json-file-input {
+        display: none; /* Hidden, triggered by button */
+    }
+
+    /* Navigation */
+    .steps-nav {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px; /* Increased margin */
+    }
+
+    .step-btn {
+      padding: 10px 20px;
+      margin: 0 10px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em; /* Adjusted from 18px to be relative */
+      transition: all 0.3s;
+    }
+
+    .step-btn.active {
+      background-color: #007bff;
+      color: white;
+      border-color: #007bff;
+    }
+
+    .step-btn:hover:not(.active) {
+      background-color: #e9e9e9;
+    }
+
+    /* Main Content Area */
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    section {
+      width: 110%; /* Reference: 110% */
+      max-width: 1200px; /* Reference: 1200px */
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 20px; /* Reference: 20px */
+      padding: 20px; /* Reference: 20px */
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      box-sizing: border-box;
+    }
+
+    /* Input Fields & Labels (Full Width) - Applying reference styles */
+    .info-section,
+    .duty-block,
+    .cluster-creation {
+      text-align: right;
+    }
+    
+    .info-section div {
+        margin-bottom: 15px; /* Reference */
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px; /* Reference */
+      font-weight: bold;
+      text-align: right;
+      font-size: 18px; /* Reference */
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%; /* Full width */
+      padding: 10px; /* Reference */
+      margin-bottom: 10px; /* Reference */
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      text-align: right;
+      font-size: 18px; /* Reference */
+    }
+
+    textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    /* Step 1: Duties & Tasks - Applying reference styles */
+    .duty-block {
+      margin-bottom: 25px; /* Reference */
+      padding: 20px; /* Reference */
+      background-color: #fff;
+    }
+
+    .duty-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px; /* Reference */
+    }
+
+    .duty-title h3 {
+      margin: 0;
+      font-size: 20px; /* Reference */
+    }
+
+    .duty-name {
+      margin-bottom: 15px; /* Reference */
+    }
+    
+    .duty-name label {
+        font-size: 18px; /* Reference */
+    }
+    
+    .duty-name input[type="text"] {
+        font-size: 18px; /* Reference */
+    }
+
+    .tasks-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px; /* Reference */
+      margin-top: 20px; /* Reference */
+    }
+
+    .tasks-header h4 {
+      margin: 0;
+      font-size: 18px; /* Reference */
+    }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px; /* Reference */
+    }
+
+    .task-label {
+      min-width: 80px; 
+      font-weight: bold;
+      text-align: right;
+      font-size: 18px; /* Reference */
+      padding-left: 5px;
+    }
+
+    .task-input {
+      flex-grow: 1;
+      margin: 0 10px; /* Reference */
+    }
+
+    .task-input input[type="text"] {
+        margin-bottom: 0; 
+        font-size: 18px; /* Reference */
+    }
+
+    .task-buttons {
+      display: flex;
+      gap: 5px;
+    }
+
+    /* Buttons - Applying reference styles */
+    button {
+        font-size: 18px; /* Reference */
+    }
+
+    .add-task-btn,
+    .add-duty-btn,
+    .save-btn,
+    .create-cluster-btn {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 15px; /* Reference for add-task-btn */
+      cursor: pointer;
+    }
+    .add-task-btn:hover, .add-duty-btn:hover, .save-btn:hover, .create-cluster-btn:hover {
+      background-color: #218838;
+    }
+
+    .add-task-btn {
+        display: flex;
+        align-items: center;
+    }
+    .add-task-btn::before {
+      content: "+";
+      margin-left: 5px;
+      font-size: 20px; /* Reference */
+    }
+
+    .add-duty-btn {
+        margin-bottom: 20px; /* Reference */
+        padding: 10px 15px; /* Reference */
+    }
+
+    .remove-btn,
+    .remove-task-btn,
+    .delete-cluster,
+    .remove-selected {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 15px; /* Reference for remove-btn */
+      cursor: pointer;
+    }
+    .remove-btn:hover, .remove-task-btn:hover, .delete-cluster:hover, .remove-selected:hover {
+      background-color: #c82333;
+    }
+
+    .remove-task-btn {
+      width: 32px; /* Reference */
+      height: 32px; /* Reference */
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px; /* Reference */
+      margin-right: 5px;
+    }
+
+    .standards-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      width: 32px; /* Match remove-task-btn */
+      height: 32px; /* Match remove-task-btn */
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1em; /* Keep relative for icon */
+    }
+    .standards-btn:hover {
+      background-color: #0069d9;
+    }
+
+    .export-btn {
+      background-color: #17a2b8;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 12px 20px; /* Reference */
+      cursor: pointer;
+      margin: 0 10px;
+    }
+    .export-btn:hover {
+      background-color: #138496;
+    }
+
+    .close-btn {
+      background-color: #6c757d;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    .close-btn:hover {
+      background-color: #5a6268;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      overflow: auto;
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 80%; 
+      max-width: 700px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      position: relative;
+      direction: rtl;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 1.3em;
+    }
+
+    .modal-body {
+      margin-bottom: 20px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-start;
+      gap: 10px;
+    }
+
+    /* Step 2: Competency Data - Applying reference styles where applicable */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: 1.5em;
+      color: #333;
+    }
+
+    .tasks-list {
+      margin-bottom: 25px;
+    }
+
+    .task-category {
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 15px;
+      background-color: #fff;
+    }
+
+    .category-header {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #333;
+      font-size: 1.2em;
+    }
+
+    .task-checkbox-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      padding: 8px;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+
+    .task-checkbox-item:hover {
+      background-color: #f0f0f0;
+    }
+
+    .task-checkbox-item.hidden {
+        display: none;
+    }
+
+    .task-checkbox {
+      margin-left: 10px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .task-checkbox-label {
+      font-size: 1em;
+      cursor: pointer;
+      flex-grow: 1;
+      text-align: right;
+    }
+
+    .cluster-creation {
+      margin-top: 25px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #fff;
+    }
+
+    .cluster-header {
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #333;
+      font-size: 1.2em;
+    }
+
+    .cluster-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      text-align: right;
+    }
+
+    .selected-tasks {
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+      min-height: 80px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .selected-task-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 8px;
+      margin-bottom: 5px;
+      background-color: #e9e9e9;
+      border-radius: 4px;
+      font-size: 0.95em;
+    }
+
+    .remove-selected {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.9em;
+      padding: 0;
+      flex-shrink: 0;
+    }
+
+    .create-cluster-btn {
+      align-self: flex-start;
+      margin-top: 10px;
+    }
+
+    .clusters-list {
+      margin-top: 25px;
+    }
+
+    /* Competency Table */
+    .competency-table {
+      width: 100%; 
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      border: 1px solid black;
+      font-size: 0.95em;
+    }
+
+    .competency-table th,
+    .competency-table td {
+      border: 1px solid black;
+      padding: 8px;
+      text-align: right;
+      vertical-align: top;
+    }
+
+    .competency-table th.competency-title-cell {
+      background-color: #e0e0e0;
+      font-weight: bold;
+      font-size: 1.1em;
+      text-align: center;
+      position: relative; 
+    }
+
+    .competency-table td.label-cell {
+      font-weight: bold;
+      width: 150px; /* Reference from Word export style */
+      background-color: #f8f8f8;
+    }
+
+    /* Remove bullets from competency table */
+    .competency-table .tasks-value-cell div,
+    .competency-table .standards-value-cell div {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
+
+    .competency-table .tasks-value-cell div > div,
+    .competency-table .standards-value-cell div > div {
+      margin-bottom: 4px;
+      padding: 0;
+    }
+
+    .delete-cluster {
+      position: absolute; 
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 4px 8px;
+      font-size: 0.9em;
+    }
+
+    .export-section {
+      margin-top: 25px;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Step Visibility */
+    .step-content {
+      display: none;
+    }
+
+    .step-content.active {
+      display: block;
+    }
+
+    /* Responsive adjustments if needed */
+    @media (max-width: 600px) {
+        .App-header h1 { font-size: 1.5em; }
+        .step-btn { padding: 8px 15px; font-size: 0.9em; }
+        main { padding: 0 10px; }
+        section { padding: 10px; width: 95%; }
+        label, input, textarea, button { font-size: 0.95em; }
+        .task-item { flex-direction: column; align-items: flex-start; }
+        .task-input { margin: 5px 0; width:100%; }
+        .task-buttons { margin-top: 5px; }
+        .modal-content { width: 90%; }
+        .competency-table td.label-cell { width: 100px; }
+        .delete-cluster { position: static; float: left; margin-top: 5px; }
+        .data-management-section { flex-direction: column; align-items: stretch; }
+        .data-management-section button { width: 100%; margin-bottom: 5px; }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="App">
+    <header class="App-header">
+      <h1>ورشة عمل تطوير المناهج (DACUM)</h1>
+    </header>
+    
+    <div class="data-management-section">
+        <button type="button" id="clear-data-btn" class="clear-btn">تفريغ المحتويات</button>
+        <button type="button" id="save-json-btn" class="json-btn">حفظ كـ JSON</button>
+        <button type="button" id="open-json-btn" class="json-btn">فتح ملف JSON</button>
+        <input type="file" id="open-json-file-input" accept=".json">
+    </div>
+
+    <div class="steps-nav">
+      <button class="step-btn active" id="step1-btn">الخطوة 1: الواجبات والمهام</button>
+      <button class="step-btn" id="step2-btn">الخطوة 2: بيانات الكفاءة</button>
+    </div>
+
+    <main>
+      <!-- الخطوة 1: الواجبات والمهام -->
+      <div id="step1-content" class="step-content active">
+        <!-- قسم المعلومات الأساسية -->
+        <section class="info-section">
+          <div>
+            <label for="professionName">اسم المهنة:</label>
+            <input id="professionName" type="text" value="">
+          </div>
+          <div>
+            <label for="workName">اسم العمل:</label>
+            <input id="workName" type="text" value="">
+          </div>
+        </section>
+
+        <!-- قسم الواجبات والمهام -->
+        <section class="duties-section">
+          <div id="duties-container">
+            <!-- الواجبات والمهام ستعرض هنا -->
+          </div>
+          <button type="button" class="add-duty-btn" id="add-duty-btn">إضافة واجب جديد</button>
+        </section>
+
+        <!-- قسم التصدير والانتقال -->
+        <section class="export-section">
+          <button class="export-btn" id="export-step1-btn">تصدير إلى Word</button>
+          <button class="export-btn" id="next-step-btn">الانتقال للخطوة 2</button>
+        </section>
+      </div>
+
+      <!-- الخطوة 2: بيانات الكفاءة -->
+      <div id="step2-content" class="step-content">
+        <section class="competency-section">
+          <div class="section-header">
+            <h2>بيانات الكفاءة</h2>
+          </div>
+
+          <div class="tasks-list" id="tasks-list">
+            <!-- قائمة المهام المتاحة ستعرض هنا -->
+          </div>
+
+          <div class="cluster-creation">
+            <div class="cluster-header">تكوين كفاءة جديدة</div>
+            <div class="cluster-form">
+              <div class="form-group">
+                <label for="competency-name">عنوان الكفاءة:</label>
+                <input type="text" id="competency-name" placeholder="أدخل عنوان الكفاءة الجديد...">
+              </div>
+              <div class="form-group">
+                <label for="competency-scope">المدى:</label>
+                <input type="text" id="competency-scope" placeholder="أدخل مدى الكفاءة...">
+              </div>
+              <div class="form-group">
+                <label>المهام المختارة:</label>
+                <div class="selected-tasks" id="selected-tasks">
+                  <div class="no-tasks-message">لم يتم اختيار أي مهام بعد</div>
+                </div>
+              </div>
+              <button type="button" class="create-cluster-btn" id="create-cluster-btn">تكوين الكفاءة</button>
+            </div>
+          </div>
+
+          <div class="clusters-list" id="clusters-list">
+            <!-- جداول الكفاءات ستعرض هنا -->
+          </div>
+        </section>
+
+        <!-- قسم التصدير والعودة -->
+        <section class="export-section">
+          <button class="export-btn" id="export-step2-btn">تصدير إلى Word</button>
+          <button class="export-btn" id="prev-step-btn">العودة للخطوة 1</button>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- النافذة المنبثقة لمعايير الأداء -->
+  <div id="standards-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>معايير الأداء</h3>
+      </div>
+      <div class="modal-body">
+        <textarea id="standards-text" placeholder="أدخل معايير الأداء هنا..."></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="save-btn" id="save-standards-btn">خزن</button>
+        <button type="button" class="close-btn" id="close-standards-btn">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Initialization ---
+    let duties = [];
+    let competencyClusters = [];
+    let currentDutyId = null;
+    let currentTaskId = null;
+    let nextDutyId = 0;
+    let nextTaskId = {}; // { dutyId: nextId }
+
+    // --- DOM Elements ---
+    const dutiesContainer = document.getElementById("duties-container");
+    const addDutyBtn = document.getElementById("add-duty-btn");
+    const exportStep1Btn = document.getElementById("export-step1-btn");
+    const nextStepBtn = document.getElementById("next-step-btn");
+    const prevStepBtn = document.getElementById("prev-step-btn");
+    const exportStep2Btn = document.getElementById("export-step2-btn");
+    const step1Content = document.getElementById("step1-content");
+    const step2Content = document.getElementById("step2-content");
+    const step1NavBtn = document.getElementById("step1-btn");
+    const step2NavBtn = document.getElementById("step2-btn");
+    const tasksListContainer = document.getElementById("tasks-list");
+    const selectedTasksContainer = document.getElementById("selected-tasks");
+    const competencyNameInput = document.getElementById("competency-name");
+    const competencyScopeInput = document.getElementById("competency-scope");
+    const createClusterBtn = document.getElementById("create-cluster-btn");
+    const clustersListContainer = document.getElementById("clusters-list");
+    const standardsModal = document.getElementById("standards-modal");
+    const standardsText = document.getElementById("standards-text");
+    const saveStandardsBtn = document.getElementById("save-standards-btn");
+    const closeStandardsBtn = document.getElementById("close-standards-btn");
+    const professionNameInput = document.getElementById("professionName");
+    const workNameInput = document.getElementById("workName");
+    
+    // New Data Management Buttons
+    const clearDataBtn = document.getElementById("clear-data-btn");
+    const saveJsonBtn = document.getElementById("save-json-btn");
+    const openJsonBtn = document.getElementById("open-json-btn");
+    const openJsonFileInput = document.getElementById("open-json-file-input");
+
+
+    // --- Utility Functions ---
+    function getLetterForNumber(num) {
+      return String.fromCharCode(65 + num);
+    }
+
+    // --- Data Handling ---
+    function loadData() {
+      const savedDuties = localStorage.getItem("dacumDuties");
+      const savedClusters = localStorage.getItem("dacumClusters");
+      const savedProfession = localStorage.getItem("dacumProfessionName");
+      const savedWork = localStorage.getItem("dacumWorkName");
+
+      duties = savedDuties ? JSON.parse(savedDuties) : [];
+      competencyClusters = savedClusters ? JSON.parse(savedClusters) : [];
+      professionNameInput.value = savedProfession || "";
+      workNameInput.value = savedWork || "";
+
+      nextDutyId = duties.length > 0 ? Math.max(...duties.map((d) => d.id)) + 1 : 0;
+      nextTaskId = {};
+      duties.forEach((duty) => {
+        nextTaskId[duty.id] = duty.tasks.length > 0 ? Math.max(...duty.tasks.map((t) => t.id)) + 1 : 0;
+        duty.tasks.forEach((task) => {
+          task.clustered = task.clustered || false;
+          task.standards = task.standards || "";
+        });
+      });
+
+      if (duties.length === 0) {
+        addDuty(false); // Add one default duty if none exist, without rendering yet
+      }
+    }
+
+    function saveData() {
+      localStorage.setItem("dacumDuties", JSON.stringify(duties));
+      localStorage.setItem("dacumClusters", JSON.stringify(competencyClusters));
+      localStorage.setItem("dacumProfessionName", professionNameInput.value);
+      localStorage.setItem("dacumWorkName", workNameInput.value);
+    }
+    
+    function clearAllData() {
+        if (confirm("هل أنت متأكد أنك تريد تفريغ جميع المحتويات المخزنة؟ لا يمكن التراجع عن هذا الإجراء.")) {
+            localStorage.removeItem("dacumDuties");
+            localStorage.removeItem("dacumClusters");
+            localStorage.removeItem("dacumProfessionName");
+            localStorage.removeItem("dacumWorkName");
+            
+            duties = [];
+            competencyClusters = [];
+            professionNameInput.value = "";
+            workNameInput.value = "";
+            nextDutyId = 0;
+            nextTaskId = {};
+            
+            addDuty(false); // Add one default duty
+            renderDuties();
+            if (step2Content.classList.contains("active")) {
+                renderTasksList();
+                renderClusters();
+            }
+            alert("تم تفريغ جميع المحتويات.");
+        }
+    }
+
+    function saveAsJson() {
+        const dataToSave = {
+            professionName: professionNameInput.value,
+            workName: workNameInput.value,
+            duties: duties,
+            competencyClusters: competencyClusters
+        };
+        const jsonData = JSON.stringify(dataToSave, null, 2); // null, 2 for pretty printing
+        const blob = new Blob([jsonData], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `DACUM_Data_${new Date().toISOString().slice(0,10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        alert("تم حفظ البيانات كملف JSON.");
+    }
+
+    function handleOpenJsonFile(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    if (importedData && importedData.duties && importedData.competencyClusters) {
+                        professionNameInput.value = importedData.professionName || "";
+                        workNameInput.value = importedData.workName || "";
+                        duties = importedData.duties;
+                        competencyClusters = importedData.competencyClusters;
+                        
+                        // Re-initialize IDs and clustered status
+                        nextDutyId = duties.length > 0 ? Math.max(...duties.map(d => d.id)) + 1 : 0;
+                        nextTaskId = {};
+                        duties.forEach(duty => {
+                            nextTaskId[duty.id] = duty.tasks.length > 0 ? Math.max(...duty.tasks.map(t => t.id)) + 1 : 0;
+                            duty.tasks.forEach(task => {
+                                task.clustered = task.clustered || false; // Ensure property exists
+                                task.standards = task.standards || ""; // Ensure property exists
+                            });
+                        });
+
+                        saveData(); // Save imported data to localStorage
+                        renderDuties();
+                        if (step1Content.classList.contains("active")) {
+                           showStep(1); // Refresh current step view
+                        } else {
+                           showStep(2);
+                        }
+                        alert("تم فتح الملف واستيراد البيانات بنجاح.");
+                    } else {
+                        alert("ملف JSON غير صالح أو لا يحتوي على البيانات المطلوبة.");
+                    }
+                } catch (error) {
+                    alert("حدث خطأ أثناء قراءة ملف JSON: " + error.message);
+                }
+            };
+            reader.readAsText(file);
+            openJsonFileInput.value = null; // Reset file input
+        }
+    }
+
+
+    // --- Step Navigation ---
+    function showStep(stepNumber) {
+      step1Content.classList.toggle("active", stepNumber === 1);
+      step2Content.classList.toggle("active", stepNumber === 2);
+      step1NavBtn.classList.toggle("active", stepNumber === 1);
+      step2NavBtn.classList.toggle("active", stepNumber === 2);
+
+      if (stepNumber === 2) {
+        renderTasksList();
+        renderClusters();
+      }
+      saveData();
+    }
+
+    // --- Step 1: Duties & Tasks Rendering & Logic ---
+    function renderDuties() {
+      if (!dutiesContainer) return;
+      dutiesContainer.innerHTML = "";
+
+      duties.forEach((duty, dutyIndex) => {
+        const dutyBlock = document.createElement("div");
+        dutyBlock.className = "duty-block";
+        dutyBlock.dataset.dutyId = duty.id;
+
+        const dutyTitle = document.createElement("div");
+        dutyTitle.className = "duty-title";
+        const dutyHeading = document.createElement("h3");
+        dutyHeading.textContent = `الواجب ${getLetterForNumber(dutyIndex)}`;
+        const removeDutyBtn = document.createElement("button");
+        removeDutyBtn.type = "button";
+        removeDutyBtn.className = "remove-btn";
+        removeDutyBtn.textContent = "إزالة الواجب";
+        removeDutyBtn.onclick = () => removeDuty(duty.id);
+        dutyTitle.appendChild(dutyHeading);
+        if (duties.length > 1) {
+          dutyTitle.appendChild(removeDutyBtn);
+        }
+        dutyBlock.appendChild(dutyTitle);
+
+        const dutyNameDiv = document.createElement("div");
+        dutyNameDiv.className = "duty-name";
+        const dutyLabel = document.createElement("label");
+        dutyLabel.htmlFor = `duty-${duty.id}`;
+        dutyLabel.textContent = "اسم الواجب:";
+        const dutyInput = document.createElement("input");
+        dutyInput.id = `duty-${duty.id}`;
+        dutyInput.type = "text";
+        dutyInput.placeholder = "أدخل اسم الواجب...";
+        dutyInput.value = duty.name;
+        dutyInput.oninput = (e) => updateDutyName(duty.id, e.target.value);
+        dutyNameDiv.appendChild(dutyLabel);
+        dutyNameDiv.appendChild(dutyInput);
+        dutyBlock.appendChild(dutyNameDiv);
+
+        const tasksHeader = document.createElement("div");
+        tasksHeader.className = "tasks-header";
+        const tasksHeading = document.createElement("h4");
+        tasksHeading.textContent = "المهام:";
+        const addTaskBtnElement = document.createElement("button");
+        addTaskBtnElement.type = "button";
+        addTaskBtnElement.className = "add-task-btn";
+        addTaskBtnElement.textContent = "إضافة مهمة";
+        addTaskBtnElement.onclick = () => addTask(duty.id);
+        tasksHeader.appendChild(tasksHeading);
+        tasksHeader.appendChild(addTaskBtnElement);
+        dutyBlock.appendChild(tasksHeader);
+
+        duty.tasks.forEach((task, taskIndex) => {
+          const taskItem = document.createElement("div");
+          taskItem.className = "task-item";
+          taskItem.dataset.taskId = task.id;
+
+          const taskLabel = document.createElement("span");
+          taskLabel.className = "task-label";
+          taskLabel.textContent = `المهمة ${getLetterForNumber(dutyIndex)}${taskIndex + 1}:`;
+
+          const taskInputDiv = document.createElement("div");
+          taskInputDiv.className = "task-input";
+          const taskInput = document.createElement("input");
+          taskInput.id = `task-${duty.id}-${task.id}`;
+          taskInput.type = "text";
+          taskInput.placeholder = "أدخل اسم المهمة...";
+          taskInput.value = task.name;
+          taskInput.oninput = (e) => updateTaskName(duty.id, task.id, e.target.value);
+          taskInputDiv.appendChild(taskInput);
+
+          const taskButtons = document.createElement("div");
+          taskButtons.className = "task-buttons";
+
+          const standardsBtn = document.createElement("button");
+          standardsBtn.type = "button";
+          standardsBtn.className = "standards-btn";
+          standardsBtn.textContent = "م";
+          standardsBtn.title = "معايير الأداء";
+          standardsBtn.onclick = () => openStandardsModal(duty.id, task.id);
+
+          const removeTaskBtn = document.createElement("button");
+          removeTaskBtn.type = "button";
+          removeTaskBtn.className = "remove-task-btn";
+          removeTaskBtn.textContent = "×";
+          removeTaskBtn.title = "إزالة المهمة";
+          removeTaskBtn.onclick = () => removeTask(duty.id, task.id);
+
+          taskButtons.appendChild(standardsBtn);
+          if (duty.tasks.length > 1) {
+            taskButtons.appendChild(removeTaskBtn);
+          }
+
+          taskItem.appendChild(taskLabel);
+          taskItem.appendChild(taskInputDiv);
+          taskItem.appendChild(taskButtons);
+          dutyBlock.appendChild(taskItem);
+        });
+
+        dutiesContainer.appendChild(dutyBlock);
+      });
+      saveData();
+    }
+
+    function addDuty(render = true) {
+      const newDuty = {
+        id: nextDutyId++,
+        name: "",
+        tasks: [],
+      };
+      nextTaskId[newDuty.id] = 0;
+      duties.push(newDuty);
+      addTask(newDuty.id, false); // Add a default task to the new duty, without rendering
+      if (render) {
+        renderDuties();
+      }
+    }
+
+    function removeDuty(dutyId) {
+      if (duties.length <= 1) {
+        alert("يجب أن يكون هناك واجب واحد على الأقل.");
+        return;
+      }
+      const dutyToRemove = duties.find((d) => d.id === dutyId);
+      const isAnyTaskClustered = dutyToRemove.tasks.some((task) => task.clustered);
+      if (isAnyTaskClustered) {
+        if (!confirm("بعض مهام هذا الواجب مستخدمة في الكفاءات. هل أنت متأكد من حذف الواجب وجميع مهامه من الكفاءات؟")) {
+          return;
+        }
+        competencyClusters.forEach((cluster) => {
+          cluster.tasks = cluster.tasks.filter((taskRef) => taskRef.dutyId !== dutyId);
+        });
+        competencyClusters = competencyClusters.filter((cluster) => cluster.tasks.length > 0);
+      }
+      duties = duties.filter((duty) => duty.id !== dutyId);
+      delete nextTaskId[dutyId];
+      renderDuties();
+      if (step2Content.classList.contains("active")) {
+        renderTasksList();
+        renderClusters();
+      }
+    }
+
+    function addTask(dutyId, render = true) {
+      const dutyIndex = duties.findIndex((d) => d.id === dutyId);
+      if (dutyIndex === -1) return;
+      const newTask = {
+        id: nextTaskId[dutyId]++,
+        name: "",
+        standards: "",
+        clustered: false,
+      };
+      duties[dutyIndex].tasks.push(newTask);
+      if (render) {
+        renderDuties();
+      }
+    }
+
+    function removeTask(dutyId, taskId) {
+      const dutyIndex = duties.findIndex((d) => d.id === dutyId);
+      if (dutyIndex === -1) return;
+      if (duties[dutyIndex].tasks.length <= 1) {
+        alert("يجب أن تكون هناك مهمة واحدة على الأقل لكل واجب.");
+        return;
+      }
+      const taskToRemove = duties[dutyIndex].tasks.find((t) => t.id === taskId);
+      if (taskToRemove.clustered) {
+        if (!confirm("هذه المهمة مستخدمة في إحدى الكفاءات. هل أنت متأكد من حذفها من الكفاءة أيضاً؟")) {
+          return;
+        }
+        competencyClusters.forEach((cluster) => {
+          cluster.tasks = cluster.tasks.filter((taskRef) => !(taskRef.dutyId === dutyId && taskRef.taskId === taskId));
+        });
+        competencyClusters = competencyClusters.filter((cluster) => cluster.tasks.length > 0);
+      }
+      duties[dutyIndex].tasks = duties[dutyIndex].tasks.filter((task) => task.id !== taskId);
+      renderDuties();
+      if (step2Content.classList.contains("active")) {
+        renderTasksList();
+        renderClusters();
+      }
+    }
+
+    function updateDutyName(dutyId, newName) {
+      const duty = duties.find((d) => d.id === dutyId);
+      if (duty) duty.name = newName;
+      saveData();
+    }
+
+    function updateTaskName(dutyId, taskId, newName) {
+      const duty = duties.find((d) => d.id === dutyId);
+      if (duty) {
+        const task = duty.tasks.find((t) => t.id === taskId);
+        if (task) task.name = newName;
+      }
+      saveData();
+    }
+
+    // --- Standards Modal Logic ---
+    function openStandardsModal(dutyId, taskId) {
+      currentDutyId = dutyId;
+      currentTaskId = taskId;
+      const duty = duties.find((d) => d.id === dutyId);
+      const task = duty ? duty.tasks.find((t) => t.id === taskId) : null;
+      standardsText.value = task ? task.standards : "";
+      standardsModal.style.display = "block";
+    }
+
+    function closeStandardsModal() {
+      standardsModal.style.display = "none";
+      currentDutyId = null;
+      currentTaskId = null;
+    }
+
+    function saveStandards() {
+      if (currentDutyId === null || currentTaskId === null) return;
+      const duty = duties.find((d) => d.id === currentDutyId);
+      if (duty) {
+        const task = duty.tasks.find((t) => t.id === currentTaskId);
+        if (task) {
+          task.standards = standardsText.value;
+        }
+      }
+      saveData();
+      closeStandardsModal();
+    }
+
+    // --- Step 2: Competency Data Rendering & Logic ---
+    function renderTasksList() {
+      if (!tasksListContainer) return;
+      tasksListContainer.innerHTML = "";
+      let availableTasksExist = false;
+
+      duties.forEach((duty, dutyIndex) => {
+        const availableTasks = duty.tasks.filter((task) => task.name && !task.clustered);
+        if (availableTasks.length === 0) return;
+
+        availableTasksExist = true;
+        const taskCategory = document.createElement("div");
+        taskCategory.className = "task-category";
+
+        const categoryHeader = document.createElement("div");
+        categoryHeader.className = "category-header";
+        categoryHeader.textContent = `الواجب ${getLetterForNumber(dutyIndex)}: ${duty.name || "(بدون اسم)"}`;
+        taskCategory.appendChild(categoryHeader);
+
+        availableTasks.forEach((task) => {
+          const originalTaskIndex = duties[dutyIndex].tasks.findIndex((t) => t.id === task.id);
+          const taskItem = document.createElement("div");
+          taskItem.className = "task-checkbox-item";
+          taskItem.dataset.dutyId = duty.id;
+          taskItem.dataset.taskId = task.id;
+
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.className = "task-checkbox";
+          checkbox.id = `task-check-${duty.id}-${task.id}`;
+          checkbox.onchange = (e) => toggleTaskSelection(duty.id, task.id, task.name, e.target.checked);
+
+          const label = document.createElement("label");
+          label.className = "task-checkbox-label";
+          label.htmlFor = `task-check-${duty.id}-${task.id}`;
+          label.textContent = `المهمة ${getLetterForNumber(dutyIndex)}${originalTaskIndex + 1}: ${task.name}`;
+
+          taskItem.appendChild(checkbox);
+          taskItem.appendChild(label);
+          taskCategory.appendChild(taskItem);
+        });
+        tasksListContainer.appendChild(taskCategory);
+      });
+
+      if (!availableTasksExist) {
+        tasksListContainer.innerHTML = "<p>لا توجد مهام متاحة لإضافتها إلى كفاءة جديدة. يرجى إضافة مهام في الخطوة الأولى أو التأكد من عدم استخدام جميع المهام في كفاءات أخرى.</p>";
+      }
+      clearSelectedTasksUI();
+    }
+
+    function toggleTaskSelection(dutyId, taskId, taskName, isSelected) {
+      const noTasksMessage = selectedTasksContainer.querySelector(".no-tasks-message");
+      if (isSelected) {
+        if (noTasksMessage) noTasksMessage.remove();
+        const selectedTaskItem = document.createElement("div");
+        selectedTaskItem.className = "selected-task-item";
+        selectedTaskItem.dataset.dutyId = dutyId;
+        selectedTaskItem.dataset.taskId = taskId;
+        const taskText = document.createElement("span");
+        taskText.textContent = taskName; 
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "remove-selected";
+        removeBtn.textContent = "×";
+        removeBtn.onclick = () => {
+          const checkbox = document.getElementById(`task-check-${dutyId}-${taskId}`);
+          if (checkbox) checkbox.checked = false;
+          selectedTaskItem.remove();
+          checkSelectedTasksEmpty();
+        };
+        selectedTaskItem.appendChild(taskText);
+        selectedTaskItem.appendChild(removeBtn);
+        selectedTasksContainer.appendChild(selectedTaskItem);
+      } else {
+        const selectedTaskItem = selectedTasksContainer.querySelector(`[data-duty-id="${dutyId}"][data-task-id="${taskId}"]`);
+        if (selectedTaskItem) selectedTaskItem.remove();
+        checkSelectedTasksEmpty();
+      }
+    }
+
+    function checkSelectedTasksEmpty() {
+      if (selectedTasksContainer.children.length === 0 && !selectedTasksContainer.querySelector(".no-tasks-message")) {
+        const noTasksMsg = document.createElement("div");
+        noTasksMsg.className = "no-tasks-message";
+        noTasksMsg.textContent = "لم يتم اختيار أي مهام بعد";
+        selectedTasksContainer.appendChild(noTasksMsg);
+      }
+    }
+
+    function clearSelectedTasksUI() {
+      selectedTasksContainer.innerHTML = "";
+      const noTasksMsg = document.createElement("div");
+      noTasksMsg.className = "no-tasks-message";
+      noTasksMsg.textContent = "لم يتم اختيار أي مهام بعد";
+      selectedTasksContainer.appendChild(noTasksMsg);
+      competencyNameInput.value = "";
+      competencyScopeInput.value = "";
+    }
+
+    function createCompetencyCluster() {
+      const name = competencyNameInput.value.trim();
+      const scope = competencyScopeInput.value.trim();
+      const selectedTaskItems = selectedTasksContainer.querySelectorAll(".selected-task-item");
+      
+      if (!name) {
+        alert("يرجى إدخال عنوان الكفاءة.");
+        return;
+      }
+      
+      if (selectedTaskItems.length === 0) {
+        alert("يرجى اختيار مهمة واحدة على الأقل.");
+        return;
+      }
+      
+      const selectedTasks = [];
+      selectedTaskItems.forEach((item) => {
+        const dutyId = parseInt(item.dataset.dutyId);
+        const taskId = parseInt(item.dataset.taskId);
+        const duty = duties.find((d) => d.id === dutyId);
+        const task = duty ? duty.tasks.find((t) => t.id === taskId) : null;
+        
+        if (duty && task) {
+          task.clustered = true;
+          selectedTasks.push({
+            dutyId,
+            taskId,
+            dutyIndex: duties.findIndex((d) => d.id === dutyId),
+            taskIndex: duty.tasks.findIndex((t) => t.id === taskId),
+          });
+        }
+      });
+      
+      const newCluster = {
+        id: competencyClusters.length > 0 ? Math.max(...competencyClusters.map((c) => c.id)) + 1 : 0,
+        name,
+        scope,
+        tasks: selectedTasks,
+      };
+      
+      competencyClusters.push(newCluster);
+      saveData();
+      renderTasksList();
+      renderClusters();
+      clearSelectedTasksUI();
+    }
+
+    function deleteCompetencyCluster(clusterId) {
+      if (!confirm("هل أنت متأكد من حذف هذه الكفاءة؟")) return;
+      
+      const clusterToDelete = competencyClusters.find((c) => c.id === clusterId);
+      if (clusterToDelete) {
+        clusterToDelete.tasks.forEach((taskRef) => {
+          const duty = duties.find((d) => d.id === taskRef.dutyId);
+          if (duty) {
+            const task = duty.tasks.find((t) => t.id === taskRef.taskId);
+            if (task) task.clustered = false;
+          }
+        });
+      }
+      
+      competencyClusters = competencyClusters.filter((c) => c.id !== clusterId);
+      saveData();
+      renderTasksList();
+      renderClusters();
+    }
+
+    function renderClusters() {
+      if (!clustersListContainer) return;
+      clustersListContainer.innerHTML = "";
+      
+      competencyClusters.forEach((cluster, clusterIndex) => {
+        // Create table for this competency
+        const table = document.createElement("table");
+        table.className = "competency-table";
+        
+        // Title row
+        const titleRow = document.createElement("tr");
+        const titleCell = document.createElement("th");
+        titleCell.className = "competency-title-cell";
+        titleCell.colSpan = 2;
+        titleCell.textContent = `الكفاءة ${clusterIndex + 1}: ${cluster.name}`;
+        
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "delete-cluster";
+        deleteBtn.textContent = "حذف";
+        deleteBtn.onclick = () => deleteCompetencyCluster(cluster.id);
+        titleCell.appendChild(deleteBtn);
+        
+        titleRow.appendChild(titleCell);
+        table.appendChild(titleRow);
+        
+        // Scope row
+        const scopeRow = document.createElement("tr");
+        const scopeLabelCell = document.createElement("td");
+        scopeLabelCell.className = "label-cell";
+        scopeLabelCell.textContent = "المدى:";
+        const scopeValueCell = document.createElement("td");
+        scopeValueCell.textContent = cluster.scope || "غير محدد";
+        scopeRow.appendChild(scopeLabelCell);
+        scopeRow.appendChild(scopeValueCell);
+        table.appendChild(scopeRow);
+        
+        // Tasks row
+        const tasksRow = document.createElement("tr");
+        const tasksLabelCell = document.createElement("td");
+        tasksLabelCell.className = "label-cell";
+        tasksLabelCell.textContent = "المهام ذات العلاقة من الملف المهني:";
+        const tasksValueCell = document.createElement("td");
+        tasksValueCell.className = "tasks-value-cell";
+        
+        // Create tasks list without bullets
+        const tasksList = document.createElement("div");
+        cluster.tasks.forEach((taskRef) => {
+          const duty = duties.find((d) => d.id === taskRef.dutyId);
+          const task = duty ? duty.tasks.find((t) => t.id === taskRef.taskId) : null;
+          
+          if (duty && task) {
+            const dutyIndex = duties.findIndex((d) => d.id === taskRef.dutyId);
+            const taskIndex = duty.tasks.findIndex((t) => t.id === taskRef.taskId);
+            const taskItem = document.createElement("div");
+            taskItem.textContent = `مهمة ${getLetterForNumber(dutyIndex)}${taskIndex + 1}: ${task.name}`;
+            tasksList.appendChild(taskItem);
+          }
+        });
+        
+        tasksValueCell.appendChild(tasksList);
+        tasksRow.appendChild(tasksLabelCell);
+        tasksRow.appendChild(tasksValueCell);
+        table.appendChild(tasksRow);
+        
+        // Standards row
+        const standardsRow = document.createElement("tr");
+        const standardsLabelCell = document.createElement("td");
+        standardsLabelCell.className = "label-cell";
+        standardsLabelCell.textContent = "معايير الأداء:";
+        const standardsValueCell = document.createElement("td");
+        standardsValueCell.className = "standards-value-cell";
+        
+        // Create standards list without bullets
+        const standardsList = document.createElement("div");
+        let standardCounter = 1;
+        cluster.tasks.forEach((taskRef) => {
+          const duty = duties.find((d) => d.id === taskRef.dutyId);
+          const task = duty ? duty.tasks.find((t) => t.id === taskRef.taskId) : null;
+          
+          if (duty && task && task.standards) {
+            const standards = task.standards.split("\n").filter(s => s.trim());
+            standards.forEach((standard) => {
+              const standardItem = document.createElement("div");
+              standardItem.textContent = `${clusterIndex + 1}-${standardCounter++}: ${standard}`;
+              standardsList.appendChild(standardItem);
+            });
+          }
+        });
+        
+        standardsValueCell.appendChild(standardsList);
+        standardsRow.appendChild(standardsLabelCell);
+        standardsRow.appendChild(standardsValueCell);
+        table.appendChild(standardsRow);
+        
+        clustersListContainer.appendChild(table);
+      });
+      
+      if (competencyClusters.length === 0) {
+        clustersListContainer.innerHTML = "<p>لم يتم إنشاء أي كفاءات بعد.</p>";
+      }
+    }
+
+    // --- Export to Word ---
+    function exportToWord(includeCompetencies = false) {
+      const professionName = professionNameInput.value || "غير محدد";
+      const workName = workNameInput.value || "غير محدد";
+      
+      let htmlContent = `
+        <html xmlns:o=\'urn:schemas-microsoft-com:office:office\' xmlns:w=\'urn:schemas-microsoft-com:office:word\' xmlns=\'http://www.w3.org/TR/REC-html40\'>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#282c34">
+
+        <head>
+          <meta charset="utf-8">
+          <title>ورشة عمل تطوير المناهج (DACUM)</title>
+          <style>
+            body { font-family: Arial, sans-serif; direction: rtl; }
+            h1, h2 { text-align: center; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            th, td { border: 1px solid black; padding: 8px; text-align: right; }
+            th { background-color: #f2f2f2; }
+            .competency-title { background-color: #e0e0e0; font-weight: bold; text-align: center; }
+            .label-cell { font-weight: bold; width: 150px; background-color: #f8f8f8; }
+          </style>
+        </head>
+        <body>
+          <h1>ورشة عمل تطوير المناهج (DACUM)</h1>
+          <p><strong>اسم المهنة:</strong> ${professionName}</p>
+          <p><strong>اسم العمل:</strong> ${workName}</p>
+          <h2>الواجبات والمهام</h2>
+      `;
+      
+      duties.forEach((duty, dutyIndex) => {
+        const dutyLetter = getLetterForNumber(dutyIndex);
+        htmlContent += `
+          <h3>الواجب ${dutyLetter}: ${duty.name || "(بدون اسم)"}</h3>
+          <table>
+            <tr>
+              <th>المهمة</th>
+            </tr>
+        `;
+        
+        duty.tasks.forEach((task, taskIndex) => {
+          htmlContent += `
+            <tr>
+              <td>المهمة ${dutyLetter}${taskIndex + 1}: ${task.name || "(بدون اسم)"}</td>
+            </tr>
+          `;
+        });
+        
+        htmlContent += `</table>`;
+      });
+      
+      if (includeCompetencies && competencyClusters.length > 0) {
+        htmlContent += `<h2>بيانات الكفاءة</h2>`;
+        
+        competencyClusters.forEach((cluster, clusterIndex) => {
+          htmlContent += `
+            <table>
+              <tr>
+                <th colspan="2" class="competency-title">الكفاءة ${clusterIndex + 1}: ${cluster.name}</th>
+              </tr>
+              <tr>
+                <td class="label-cell">المدى:</td>
+                <td>${cluster.scope || "غير محدد"}</td>
+              </tr>
+              <tr>
+                <td class="label-cell">المهام ذات العلاقة من الملف المهني:</td>
+                <td>
+          `;
+          
+          cluster.tasks.forEach((taskRef) => {
+            const duty = duties.find((d) => d.id === taskRef.dutyId);
+            const task = duty ? duty.tasks.find((t) => t.id === taskRef.taskId) : null;
+            
+            if (duty && task) {
+              const dutyIndex = duties.findIndex((d) => d.id === taskRef.dutyId);
+              const taskIndex = duty.tasks.findIndex((t) => t.id === taskRef.taskId);
+              htmlContent += `مهمة ${getLetterForNumber(dutyIndex)}${taskIndex + 1}: ${task.name}<br>`;
+            }
+          });
+          
+          htmlContent += `
+                </td>
+              </tr>
+              <tr>
+                <td class="label-cell">معايير الأداء:</td>
+                <td>
+          `;
+          
+          let standardCounter = 1;
+          cluster.tasks.forEach((taskRef) => {
+            const duty = duties.find((d) => d.id === taskRef.dutyId);
+            const task = duty ? duty.tasks.find((t) => t.id === taskRef.taskId) : null;
+            
+            if (duty && task && task.standards) {
+              const standards = task.standards.split("\n").filter(s => s.trim());
+              standards.forEach((standard) => {
+                htmlContent += `${clusterIndex + 1}-${standardCounter++}: ${standard}<br>`;
+              });
+            }
+          });
+          
+          htmlContent += `
+                </td>
+              </tr>
+            </table>
+          `;
+        });
+      }
+      
+      htmlContent += `
+        </body>
+        </html>
+      `;
+      
+      const blob = new Blob([htmlContent], { type: "application/msword" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `DACUM_${professionName}_${new Date().toLocaleDateString().replace(/\//g, "-")}.doc`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
+    // --- Event Listeners ---
+    window.addEventListener("DOMContentLoaded", () => {
+      loadData();
+      renderDuties();
+      
+      addDutyBtn.addEventListener("click", () => addDuty());
+      exportStep1Btn.addEventListener("click", () => exportToWord(false));
+      exportStep2Btn.addEventListener("click", () => exportToWord(true));
+      nextStepBtn.addEventListener("click", () => showStep(2));
+      prevStepBtn.addEventListener("click", () => showStep(1));
+      step1NavBtn.addEventListener("click", () => showStep(1));
+      step2NavBtn.addEventListener("click", () => showStep(2));
+      createClusterBtn.addEventListener("click", createCompetencyCluster);
+      saveStandardsBtn.addEventListener("click", saveStandards);
+      closeStandardsBtn.addEventListener("click", closeStandardsModal);
+      
+      professionNameInput.addEventListener("input", saveData);
+      workNameInput.addEventListener("input", saveData);
+      
+      // New Data Management Button Listeners
+      clearDataBtn.addEventListener("click", clearAllData);
+      saveJsonBtn.addEventListener("click", saveAsJson);
+      openJsonBtn.addEventListener("click", () => openJsonFileInput.click());
+      openJsonFileInput.addEventListener("change", handleOpenJsonFile);
+      
+      window.onclick = (event) => {
+        if (event.target === standardsModal) {
+          closeStandardsModal();
+        }
+      };
+    });
+</script>
+
+<!-- PWA Service Worker -->
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js")
+    .then(() => console.log("Service Worker Registered"))
+    .catch(err => console.error("SW failed", err));
+}
+  </script>
+
+</body>
+</html>
